@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ポモドーロタイマー</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .timer-container {
+            text-align: center;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .time-display {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            color: #2196F3;
+        }
+        .controls {
+            margin-top: 2rem;
+        }
+        button {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 0.5rem;
+            transition: background-color 0.3s;
+        }
+        .start {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .start:hover {
+            background-color: #45a049;
+        }
+        .stop {
+            background-color: #f44336;
+            color: white;
+        }
+        .stop:hover {
+            background-color: #da190b;
+        }
+        .reset {
+            background-color: #2196F3;
+            color: white;
+        }
+        .reset:hover {
+            background-color: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <div class="timer-container">
+        <h1>ポモドーロタイマー</h1>
+        <div class="time-display" id="timer">25:00</div>
+        <div class="controls">
+            <button class="start" onclick="startTimer()">開始</button>
+            <button class="stop" onclick="stopTimer()">停止</button>
+            <button class="reset" onclick="resetTimer()">リセット</button>
+        </div>
+    </div>
+
+    <script>
+        let timer;
+        let time = 1500; // 25分
+        let isRunning = false;
+        let sessionType = 'work';
+        const breakTime = 300; // 休憩時間（5分）
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (isRunning) return;
+            isRunning = true;
+            timer = setInterval(() => {
+                time--;
+                document.getElementById('timer').textContent = formatTime(time);
+                if (time === 0) {
+                    stopTimer();
+                    sessionType = sessionType === 'work' ? 'break' : 'work';
+                    time = sessionType === 'work' ? 1500 : breakTime;
+                    document.getElementById('timer').textContent = formatTime(time);
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+            isRunning = false;
+        }
+
+        function resetTimer() {
+            stopTimer();
+            time = sessionType === 'work' ? 1500 : breakTime;
+            document.getElementById('timer').textContent = formatTime(time);
+        }
+    </script>
+</body>
+</html>
